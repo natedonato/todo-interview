@@ -59,14 +59,15 @@ Please write your responses to the questions in the instructions here. Please in
 
 1. Initially, the addTodo button made a direct call to the apiClient add todo method, which did sucessfully post the todo to the mock "database".  However the front end remained in the same state and didn't reflect the todo being added.  My initial solution was to write a new addTodo method that used the returned todo from the apiClient.addTodo method, and folded it into an updated component state.  
 
-This worked at a basic level, but every addTodo made the whole list/every other todo perform a full rerender, which can cause some significant lag if the user has a large number of todos and they all need to rerender at once.  One way to fix this might be to break the list into components, and use React.memo / Pure components / useContext to memoize some of the todo state and only rerender the changed todos while memoizing/caching the rest of the unchanged todo list.  I might look at this next. 
+This worked at a basic level, but every addTodo made the whole list/every other todo perform a full rerender, which can cause some significant lag if the user has a large number of todos and they all need to rerender at once.  One way to fix this might be to break the list into components, and use React.memo / Pure components / useContext to memoize some of the todo state and only rerender the changed todos while memoizing/caching the rest of the unchanged todo list.  If I had more time to work I might use these refactor to handle larger lists, if that was a required functionality for this app.  In the past I have also used preexisting libraries like react-table or react-window when working with extremely large tables that need to remain performant.
 
 
 2. The "Mark Done" button made a call to the apiClient.toggleDone function, which was set up to accept the todo id; however it was actually being erroneously passed the todo label instead of the id.  When it searched the currentTodos for the todoToUpdate by id, it would never find the appropriate todo since the "id" was actually the label text.  This error coudld have been caught more easily if the toggleDone took the whole todo as an argument instead of just the label/id; or it could have been made easier to catch if the Todo type included unique types for label and id (instead of "string"/"string"), which would make it throw an error when passed the wrong argument.
 
 
-3.
-4.
+3. Added some very basic visuals for the mock delay that disable any inputs/buttons that are still processing and show when list state is still loading.  These are pretty rudimentary and don't necessarily account for any errors in api calls.
+
+4. I rolled my own drag and drop functionality because I thought it would be fun; I had never done it before but I knew there was an existing html5 web api for it.  I didn't want to add a heavy dependency to this very barebones project, and sometimes it can be difficult to add a dependency quickly without spending the proper time researching it, it's documentation, etc.
 
 ## Submitting
 
