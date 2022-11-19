@@ -57,7 +57,11 @@ An API client that interacts with a fake database. Read the file over, but you s
 
 Please write your responses to the questions in the instructions here. Please indicate any tradeoffs you made.
 
-1.
+1. Initially, the addTodo button made a direct call to the apiClient add todo method, which did sucessfully post the todo to the mock "database".  However the front end remained in the same state and didn't reflect the todo being added.  My initial solution was to write a new addTodo method that used the returned todo from the apiClient.addTodo method, and folded it into an updated component state.  
+
+This worked at a basic level, but every addTodo made the whole list/every other todo perform a full rerender, which can cause some significant lag if the user has a large number of todos and they all need to rerender at once.  One way to fix this might be to break the list into components, and use React.memo / Pure components / useContext to memoize some of the todo state and only rerender the changed todos while memoizing/caching the rest of the unchanged todo list.  I might look at this next. 
+
+
 2.
 3.
 4.
