@@ -15,12 +15,29 @@ function App() {
       .catch(console.error);
   }, [setTodos]);
 
-  const addTodo = (label: string) =>{
+  const addTodo = (label: string) => {
     apiClient.addTodo(label).then((newTodo) => {
       setTodos((oldTodos) => {
         return [...oldTodos, newTodo]
       })
       setLabel('');
+    })
+  }
+
+  const toggleDone = (id: string) => {
+    apiClient.toggleDone(id).then(todoToUpdate => {
+      if(todoToUpdate !== undefined){
+        setTodos((oldTodos) => {
+          let newTodos = [...oldTodos].map( oldTodo => {
+            if(oldTodo.id === id){
+              return {...oldTodo, done: !oldTodo.done}
+            }else{
+              return oldTodo;
+            }
+          });
+          return newTodos;
+        })
+      }
     })
   }
 
@@ -44,7 +61,7 @@ function App() {
           >
             {todo.label}
           </label>
-          <button onClick={() => apiClient.toggleDone(todo.label)}>
+          <button onClick={() => toggleDone(todo.id)}>
             Mark {todo.done ? 'Undone' : 'Done'}
           </button>
         </div>
