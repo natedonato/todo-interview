@@ -15,6 +15,15 @@ function App() {
       .catch(console.error);
   }, [setTodos]);
 
+  const addTodo = (label: string) =>{
+    apiClient.addTodo(label).then((newTodo) => {
+      setTodos((oldTodos) => {
+        return [...oldTodos, newTodo]
+      })
+      setLabel('');
+    })
+  }
+
   return (
     <>
       <h1>To Do List</h1>
@@ -25,7 +34,7 @@ function App() {
           onChange={(e) => setLabel(e.target.value)}
           placeholder="Buy groceries"
         />
-        <button onClick={() => apiClient.addTodo(label)}>Add ToDo</button>
+        <button onClick={() => addTodo(label)}>Add ToDo</button>
       </div>
 
       {todos.map((todo) => (
