@@ -62,7 +62,9 @@ Please write your responses to the questions in the instructions here. Please in
 This worked at a basic level, but every addTodo made the whole list/every other todo perform a full rerender, which can cause some significant lag if the user has a large number of todos and they all need to rerender at once.  One way to fix this might be to break the list into components, and use React.memo / Pure components / useContext to memoize some of the todo state and only rerender the changed todos while memoizing/caching the rest of the unchanged todo list.  I might look at this next. 
 
 
-2.
+2. The "Mark Done" button made a call to the apiClient.toggleDone function, which was set up to accept the todo id; however it was actually being erroneously passed the todo label instead of the id.  When it searched the currentTodos for the todoToUpdate by id, it would never find the appropriate todo since the "id" was actually the label text.  This error coudld have been caught more easily if the toggleDone took the whole todo as an argument instead of just the label/id; or it could have been made easier to catch if the Todo type included unique types for label and id (instead of "string"/"string"), which would make it throw an error when passed the wrong argument.
+
+
 3.
 4.
 

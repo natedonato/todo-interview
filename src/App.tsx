@@ -1,26 +1,36 @@
 import { useEffect, useState } from 'react';
 import { ApiClient, ToDo } from './ApiClient';
+import { TodoList } from './TodoList' 
 import './App.css';
+import { AddTodo } from './AddTodo';
 
-const apiClient = new ApiClient(false);
+const apiClient = new ApiClient(true);
 
 function App() {
+  const [listLoaded, setListLoaded] = useState<boolean>(false);
   const [todos, setTodos] = useState<ToDo[]>([]);
   const [label, setLabel] = useState('');
+  const [posting, setPosting] = useState<boolean>(false);
 
   useEffect(() => {
     apiClient
       .getToDos()
-      .then((fetchedTodos) => setTodos(fetchedTodos))
+      .then((fetchedTodos) => {setTodos(fetchedTodos)
+        setListLoaded(true);
+      }
+      )
       .catch(console.error);
-  }, [setTodos]);
+  }
+  , [setTodos]);
 
   const addTodo = (label: string) => {
+    setPosting(true);
     apiClient.addTodo(label).then((newTodo) => {
       setTodos((oldTodos) => {
         return [...oldTodos, newTodo]
       })
       setLabel('');
+      setPosting(false);
     })
   }
 
@@ -45,27 +55,11 @@ function App() {
     <>
       <h1>To Do List</h1>
 
-      <div className="add-todo-container">
-        <input
-          value={label}
-          onChange={(e) => setLabel(e.target.value)}
-          placeholder="Buy groceries"
-        />
-        <button onClick={() => addTodo(label)}>Add ToDo</button>
-      </div>
+      <AddTodo label={label} setLabel={setLabel} posting={posting} addTodo={addTodo} />
 
-      {todos.map((todo) => (
-        <div key={todo.id} className="todo-item">
-          <label
-            style={{ textDecoration: todo.done ? 'line-through' : 'none' }}
-          >
-            {todo.label}
-          </label>
-          <button onClick={() => toggleDone(todo.id)}>
-            Mark {todo.done ? 'Undone' : 'Done'}
-          </button>
-        </div>
-      ))}
+      {listLoaded ? null : <h1> Loading todo list...</h1>}
+
+      { listLoaded && <TodoList todos={todos} toggleDone={toggleDone} />}
     </>
   );
 }
